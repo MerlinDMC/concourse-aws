@@ -1,0 +1,53 @@
+#cloud-config
+
+coreos:
+  units:
+    - name: "concourse-web.service"
+      enable: true
+      command: "start"
+      content: |
+        [Unit]
+        Description=Concourse ATC/TSA
+        After=docker.service
+
+        [Service]
+        Restart=always
+        ExecStart=/opt/concourse-web.sh
+
+write_files:
+  - path: "/opt/concourse-session-signing-key"
+    permissions: "0440"
+    owner: "root"
+    encoding: "base64"
+    content: "${session_signing_key_content}"
+  - path: "/opt/concourse-tsa-host-key"
+    permissions: "0440"
+    owner: "root"
+    encoding: "base64"
+    content: "${tsa_host_key_content}"
+  - path: "/opt/concourse-tsa-authorized-worker-keys"
+    permissions: "0440"
+    owner: "root"
+    encoding: "base64"
+    content: "${tsa_authorized_worker_keys_content}"
+  - path: "/opt/concourse-web.sh"
+    permissions: "0755"
+    owner: "root"
+    content: |
+      #!/bin/sh
+      # -*- mode: sh -*-
+
+      if [[ ! -f /opt/concourse ]]; then
+          curl -Lo /opt/concourse ${concourse_download_url}
+          chmod +x /opt/concourse
+      fi
+
+      exec /opt/concourse web \
+          --bind-ip=${concourse_bind_ip} \
+          --bind-port=${concourse_bind_port} \
+          --postgres-data-source="postgres://${postgresql_username}:${postgresql_password}@${postgresql_host}:${postgresql_port}/${postgresql_name}" \
+          --tsa-host-key=/opt/concourse-tsa-host-key \
+          --tsa-authorized-keys=/opt/concourse-tsa-authorized-worker-keys \
+          --session-signing-key=/opt/concourse-session-signing-key \
+          --external-url=${concourse_external_url} \
+          --basic-auth-username=concourse --basic-auth-password=ci

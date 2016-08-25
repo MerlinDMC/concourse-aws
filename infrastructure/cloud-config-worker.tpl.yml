@@ -1,0 +1,50 @@
+#cloud-config
+
+coreos:
+  units:
+    - name: "concourse-worker.service"
+      enable: true
+      command: "start"
+      content: |
+        [Unit]
+        Description=Concourse Worker
+        After=docker.service
+
+        [Service]
+        Restart=always
+        ExecStart=/opt/concourse-worker.sh
+
+write_files:
+  - path: "/opt/concourse-tsa-public-key"
+    permissions: "0440"
+    owner: "root"
+    encoding: "base64"
+    content: "${tsa_public_key_content}"
+  - path: "/opt/concourse-tsa-worker-private-key"
+    permissions: "0440"
+    owner: "root"
+    encoding: "base64"
+    content: "${tsa_worker_private_key_content}"
+  - path: "/opt/concourse-worker.sh"
+    permissions: "0755"
+    owner: "root"
+    content: |
+      #!/bin/sh
+      # -*- mode: sh -*-
+
+      if [[ ! -f /opt/concourse ]]; then
+          curl -Lo /opt/concourse ${concourse_download_url}
+          chmod +x /opt/concourse
+      fi
+
+      if [[ "$(mount | grep /proc/xen)" != "" ]]; then
+          umount /proc/xen || true
+      fi
+
+      mkdir -p /var/lib/concourse
+
+      exec /opt/concourse worker \
+          --work-dir=/var/lib/concourse \
+          --tsa-host=${concourse_tsa_host} \
+          --tsa-public-key=/opt/concourse-tsa-public-key \
+          --tsa-worker-private-key=/opt/concourse-tsa-worker-private-key

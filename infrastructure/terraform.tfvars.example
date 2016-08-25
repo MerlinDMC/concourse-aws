@@ -1,0 +1,7 @@
+aws_access_key = ""
+aws_secret_key = ""
+aws_key_path = "./key.pem"
+aws_key_name = "concourse"
+
+#concourse_download_url = "https://github.com/concourse/concourse/releases/download/v1.6.0/concourse_linux_amd64"
+#concourse_external_url = "http://concourse.example.com"
