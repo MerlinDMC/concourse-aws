@@ -50,4 +50,4 @@ write_files:
           --tsa-authorized-keys=/opt/concourse-tsa-authorized-worker-keys \
           --session-signing-key=/opt/concourse-session-signing-key \
           --external-url=${concourse_external_url} \
-          --basic-auth-username=concourse --basic-auth-password=ci
+          --basic-auth-username=${basic_auth_username} --basic-auth-password=${basic_auth_password}

@@ -1,3 +1,11 @@
+variable "basic_auth_username" {
+  default = "concourse"
+}
+
+variable "basic_auth_password" {
+  default = "ci"
+}
+
 data "template_file" "cloud_config_web" {
   template = "${file("${path.module}/cloud-config-web.tpl.yml")}"
 
@@ -13,6 +21,9 @@ data "template_file" "cloud_config_web" {
     concourse_bind_ip      = "0.0.0.0"
     concourse_bind_port    = "8080"
     concourse_external_url = "http://${var.concourse_external_url}"
+
+    basic_auth_username = "${var.basic_auth_username}"
+    basic_auth_password = "${var.basic_auth_password}"
 
     session_signing_key_content        = "${base64encode(tls_private_key.session_signing_key.private_key_pem)}"
     tsa_host_key_content               = "${base64encode(tls_private_key.host_key.private_key_pem)}"
