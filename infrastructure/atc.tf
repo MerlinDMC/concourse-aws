@@ -99,6 +99,13 @@ resource "aws_elb" "atc" {
     lb_protocol       = "TCP"
   }
 
+  listener {
+    instance_port     = 2222
+    instance_protocol = "TCP"
+    lb_port           = 2222
+    lb_protocol       = "TCP"
+  }
+
   health_check {
     healthy_threshold   = 2
     unhealthy_threshold = 2
