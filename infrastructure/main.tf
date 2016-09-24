@@ -19,7 +19,7 @@ variable "vpc_name" {
 }
 
 variable "concourse_download_url" {
-  default = "https://github.com/concourse/concourse/releases/download/v1.6.0/concourse_linux_amd64"
+  default = "https://github.com/concourse/concourse/releases/download/v2.2.1/concourse_linux_amd64"
 }
 
 variable "concourse_external_url" {
