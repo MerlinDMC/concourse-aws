@@ -1,3 +1,7 @@
+variable "worker_count" {
+  default = "1"
+}
+
 data "template_file" "cloud_config_worker" {
   template = "${file("${path.module}/cloud-config-worker.tpl.yml")}"
 
@@ -14,7 +18,7 @@ resource "aws_instance" "worker" {
   ami                         = "ami-c36effb0"
   instance_type               = "t2.micro"
   associate_public_ip_address = true
-  count                       = 1
+  count                       = "${var.worker_count}"
 
   subnet_id = "${aws_subnet.concourse_a.id}"
 
