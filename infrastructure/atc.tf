@@ -79,7 +79,7 @@ resource "aws_security_group" "atc" {
 }
 
 resource "aws_instance" "atc" {
-  ami                         = "ami-c36effb0"
+  ami                         = "${data.aws_ami.coreos_stable.image_id}"
   instance_type               = "t2.micro"
   associate_public_ip_address = true
 

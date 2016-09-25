@@ -32,6 +32,20 @@ provider "aws" {
   region     = "${var.aws_region}"
 }
 
+data "aws_ami" "coreos_stable" {
+  most_recent = true
+  filter {
+    name = "virtualization-type"
+    values = ["hvm"]
+  }
+  filter {
+    name = "name"
+    values = ["CoreOS-stable-*"]
+  }
+  name_regex = "^CoreOS-stable-\\d{4}\\.\\d\\.\\d-hvm$"
+  owners = ["595879546273"]
+}
+
 resource "aws_vpc" "default" {
   cidr_block           = "${var.vpc_network}.0.0/16"
   enable_dns_hostnames = "true"

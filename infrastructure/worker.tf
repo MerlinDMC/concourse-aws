@@ -15,7 +15,7 @@ data "template_file" "cloud_config_worker" {
 }
 
 resource "aws_instance" "worker" {
-  ami                         = "ami-c36effb0"
+  ami                         = "${data.aws_ami.coreos_stable.image_id}"
   instance_type               = "t2.micro"
   associate_public_ip_address = true
   count                       = "${var.worker_count}"
