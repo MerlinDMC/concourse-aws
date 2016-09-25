@@ -7,6 +7,7 @@ resource "aws_db_instance" "concourse" {
   name                   = "concourse"
   username               = "concourse"
   password               = "concourse-ci"
+  publicly_accessible    = true
   db_subnet_group_name   = "${aws_db_subnet_group.concourse.id}"
   vpc_security_group_ids = ["${aws_security_group.pgsql.id}"]
 }
