@@ -20,7 +20,7 @@ data "template_file" "cloud_config_web" {
     concourse_download_url = "${var.concourse_download_url}"
     concourse_bind_ip      = "0.0.0.0"
     concourse_bind_port    = "8080"
-    concourse_external_url = "http://${var.concourse_external_url}"
+    concourse_external_url = "${var.concourse_external_url}"
 
     basic_auth_username = "${var.basic_auth_username}"
     basic_auth_password = "${var.basic_auth_password}"
